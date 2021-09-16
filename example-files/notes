@@ -1,0 +1,63 @@
+xsd 
+- XML Schema Definition defines how request and response should look like. What kind of structure should they have. 
+What are the valid values for each of the elements inside the request.
+- We can use xsd in future to check if the request which is coming in from external systems are valid
+- Also, xsd can be included in the WSDL, that can be shared with our customers who can use this xsd to understand how to create XML request
+- XSD can be given to client, they will know what is the request structure and provide request accordingly.
+- communication between service consumer and service provider.
+
+endpoint
+- something that receives the request, processes it, and sends a response back
+
+Steps for setup (right approach)
+-define xml
+-define xsd
+-configuration for spring web services
+-generate wsdl
+-ready to execute request
+
+Spring web services will generate wsdl for us
+- we will configure spring web services to use course-details.xsd to generate courses.wsdl
+
+Soap web service client
+- Wizdler
+
+Different parts of WSDL
+- types : It defines all the different elements. Defines the stuff present inside the schema. Exactly what we defined in XSD. Defines the XML structures we are going to use.
+- messages : It defines what are the request and the responses.
+- portType : It defines the interface i.e. what are the operations that are available. Defines all the different operations provided by the web service.
+- binding : Maps the operations to how we are exposing them i.e. Soap over http or soap over mq. Defines the implementation. We define style (document/RPC) and transport.
+- service : what is the location / url? How are the clients going to use this service?
+
+Security with WS-Security
+(WS-Security is a set of specifications which try to provide security around our SOAP based web services)
+(WS-Security is transport independent)
+- Authentication
+- Digital Signatures
+- Certificates
+
+- Implementation of WS-Security -> XWSS - XML and Web Services Security
+- Security Policy
+- XwsSecurityInterceptor
+(XwsSecurityInterceptor will intercept all the SOAP web service requests that are coming in to our web service and 
+checks whether it is secure, eg. user id and password)
+
+
+## Request 
+<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+	<Header>
+		<wsse:Security
+			xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+			mustUnderstand="1">
+			<wsse:UsernameToken>
+				<wsse:Username>user</wsse:Username>
+				<wsse:Password>password</wsse:Password>
+			</wsse:UsernameToken>
+		</wsse:Security>
+	</Header>
+	<Body>
+		<GetCourseDetailsRequest xmlns="http://in28minutes.com/courses">
+			<id>1</id>
+		</GetCourseDetailsRequest>
+	</Body>
+</Envelope>
